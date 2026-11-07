@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" style="color-scheme: dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="theme-color" content="#111333" />
+    <script>
+      (() => {
+        const storageKey = "blind-box-math-lab:theme"
+        let theme = "dark"
+        try {
+          const storedTheme = window.localStorage.getItem(storageKey)
+          if (storedTheme === "light" || storedTheme === "dark") {
+            theme = storedTheme
+          } else if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+            theme = "light"
+          }
+        } catch {
+          try {
+            if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+              theme = "light"
+            }
+          } catch {
+            theme = "dark"
+          }
+        }
+
+        document.documentElement.dataset.theme = theme
+        document.documentElement.style.colorScheme = theme
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute("content", theme === "light" ? "#eef4ff" : "#111333")
+      })()
+    </script>
+    <meta
+      name="description"
+      content="面向初二学生的数学探究实验室：盲盒概率、电梯停层优化与蛋糕公平切分的互动学习、模拟实验和测试反馈。"
+    />
+    <title>数学探究实验室</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

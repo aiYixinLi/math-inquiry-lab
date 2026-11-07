@@ -1,0 +1,316 @@
+/* 建模阶梯的开盒演示。盲盒、抽中卡片、收藏卡的外观全部沿用 styles.css 里“模拟实验”的样式，
+   这里只负责它们在这一页里的尺寸，以及隐藏款、保底、不知道一共几款这些建模阶梯独有的部分。 */
+
+.ladder-stage {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .24);
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at 18% 0%, rgb(var(--ladder-accent-rgb) / .12), transparent 55%),
+    rgba(5, 9, 28, .5);
+}
+
+.ladder-stage__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.ladder-stage__eyebrow {
+  color: var(--ladder-accent);
+  font: 800 10px/1 ui-monospace, monospace;
+  letter-spacing: .16em;
+}
+
+.ladder-stage__head > strong {
+  font-size: 15px;
+}
+
+.ladder-stage__tag {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.ladder-stage__head .live-chip {
+  margin-left: auto;
+}
+
+/* 开盒舱：高度要定下来，里面盲盒和抽中卡片都是按百分比摆的。 */
+
+.ladder-stage .ladder-stage__scene {
+  flex: none;
+  height: clamp(178px, 28vh, 252px);
+  border-radius: 12px;
+}
+
+.ladder-page .ladder-stage .blind-box-trigger {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-align: initial;
+}
+
+.ladder-page .ladder-stage .blind-box-trigger:hover:not(:disabled) {
+  color: inherit;
+}
+
+.ladder-page .ladder-stage .blind-box-trigger:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.ladder-page .ladder-stage .blind-box-trigger:not(:disabled) {
+  cursor: pointer;
+}
+
+.ladder-stage .draw-result__copy strong {
+  white-space: normal;
+}
+
+/* 隐藏款：金色光晕，盖过普通的“新款”绿色。 */
+
+.ladder-stage__scene.has-hidden-result::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(circle at 72% 50%, rgba(255, 200, 87, .38), transparent 62%);
+  animation: ladder-flash 1.3s ease-out both;
+}
+
+.ladder-stage .draw-result__card.is-hidden-kind {
+  border-color: rgba(255, 200, 87, .7);
+  box-shadow: 0 13px 33px rgba(0, 0, 0, .23), 0 0 30px rgba(255, 200, 87, .3), inset 0 1px rgba(255, 255, 255, .1);
+}
+
+.ladder-stage .draw-result__card.is-hidden-kind .draw-result__halo {
+  background: radial-gradient(circle, rgba(255, 200, 87, .34), transparent 68%);
+}
+
+.ladder-stage .draw-result__card.is-hidden-kind .draw-result__copy em,
+.ladder-stage__scene.has-pity-result .draw-result__copy em {
+  color: #ffc857;
+}
+
+@keyframes ladder-flash {
+  0% { opacity: 0; }
+  18% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* 进度条、保底条、各级的小标签。 */
+
+.ladder-stage__status {
+  display: grid;
+  gap: 6px;
+}
+
+.ladder-stage__status .collection-progress {
+  margin-bottom: 0;
+}
+
+.ladder-stage__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ladder-stage__chips li {
+  padding: 3px 9px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .3);
+  border-radius: 999px;
+  color: var(--ink-soft, #aeb9d8);
+  background: rgb(var(--ladder-accent-rgb) / .08);
+  font-size: var(--font-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.ladder-stage__chips li.is-warn {
+  border-color: rgb(var(--ladder-warn-rgb) / .5);
+  color: var(--ladder-warn);
+  background: rgb(var(--ladder-warn-rgb) / .1);
+}
+
+.ladder-stage__chips li.is-gold {
+  border-color: rgba(255, 200, 87, .5);
+  color: #ffc857;
+  background: rgba(255, 200, 87, .1);
+}
+
+.ladder-stage__pity {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 200, 87, .14);
+}
+
+.ladder-stage__pity i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(255, 200, 87, .45), #ffc857);
+  transition: width .3s ease;
+}
+
+/* 收藏架：卡片本身就是模拟实验的 .collection-card。 */
+
+.ladder-shelf {
+  --collection-beast-height: 54px;
+  flex: none;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  grid-auto-rows: var(--shelf-card-height, 98px);
+  gap: 5px;
+}
+
+.ladder-shelf .collection-card__topline span {
+  display: none;
+}
+
+.ladder-shelf .collection-card.is-unneeded {
+  opacity: .5;
+  filter: saturate(.5);
+}
+
+.ladder-shelf .collection-card.is-hidden-kind {
+  border-color: rgba(255, 200, 87, .45);
+}
+
+.ladder-shelf .collection-card.is-hidden-kind::after {
+  background: #ffc857;
+  box-shadow: 0 0 8px #ffc857;
+}
+
+.ladder-shelf .collection-card__topline strong {
+  gap: 3px;
+}
+
+.ladder-shelf .collection-card__count {
+  gap: 1px;
+}
+
+.ladder-shelf__left {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 3px;
+  color: var(--ink-faint, #7180a6);
+  font-size: 9px;
+  text-align: center;
+}
+
+.ladder-shelf .collection-card:has(.ladder-shelf__left) {
+  padding-bottom: 14px;
+}
+
+.ladder-shelf__ghost {
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-faint, #7180a6);
+  text-align: center;
+}
+
+.ladder-shelf__ghost > span {
+  color: var(--ladder-accent);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ladder-shelf__ghost > small {
+  font-size: var(--font-caption);
+}
+
+/* 操作按钮、速度、结果和已演示的轮。 */
+
+.ladder-stage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.ladder-stage__actions button {
+  text-align: center;
+}
+
+/* 速度的分段切换样式在 ladder.css 的 .ladder-segmented。 */
+.ladder-stage__speed {
+  margin-left: auto;
+}
+
+.ladder-stage__summary {
+  animation: result-arrive .45s cubic-bezier(.18, .84, .28, 1.2) both;
+}
+
+.ladder-stage__note {
+  margin: 0;
+}
+
+.ladder-stage__history {
+  display: grid;
+  gap: 4px;
+}
+
+.ladder-stage__history > span {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+}
+
+.ladder-stage__history ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ladder-stage__history li {
+  display: grid;
+  justify-items: center;
+  min-width: 52px;
+  padding: 3px 8px;
+  border: 1px solid var(--line, rgba(145, 166, 226, .16));
+  border-radius: 8px;
+  background: var(--ladder-inset);
+  font-variant-numeric: tabular-nums;
+}
+
+.ladder-stage__history li.is-current {
+  border-color: rgb(var(--ladder-accent-rgb) / .55);
+  background: rgb(var(--ladder-accent-rgb) / .12);
+}
+
+.ladder-stage__history li small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+}
+
+.ladder-stage__history li b {
+  font-size: var(--font-body);
+}
+
+:root[data-theme="light"] .ladder-stage {
+  background:
+    radial-gradient(ellipse at 18% 0%, rgb(var(--ladder-accent-rgb) / .14), transparent 55%),
+    rgba(255, 255, 255, .72);
+}
+
+:root[data-theme="light"] .ladder-stage__chips li.is-gold {
+  color: #8a5a00;
+}
+
+:root[data-theme="light"] .ladder-stage .draw-result__card.is-hidden-kind .draw-result__copy em,
+:root[data-theme="light"] .ladder-stage__scene.has-pity-result .draw-result__copy em {
+  color: #a86200;
+}

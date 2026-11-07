@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title description">
+  <title id="title">数学探究实验室</title>
+  <desc id="description">由概率六边形、楼层箭头和几何扇形构成的数学探究标志</desc>
+
+  <rect x="2" y="2" width="60" height="60" rx="13" fill="#111333" />
+  <path d="m18 12 10 6v12l-10 6-10-6V18Z" fill="none" stroke="#62e6ff" stroke-width="3" />
+  <circle cx="18" cy="24" r="3" fill="#62e6ff" />
+  <path d="M35 13h17M35 24h17M35 35h17M43.5 10v29m0-29-4 5m4-5 4 5m-4 24-4-5m4 5 4-5" fill="none" stroke="#9c8cff" stroke-linecap="round" stroke-width="2.6" />
+  <path d="M15 52a13 13 0 0 1 26 0H28Z" fill="#ffad68" opacity=".95" />
+  <path d="M28 52V39" stroke="#111333" stroke-width="2.6" />
+</svg>

@@ -1,0 +1,2172 @@
+.ladder-page {
+  --ladder-accent: var(--topic-accent, #62e6ff);
+  --ladder-accent-rgb: var(--topic-accent-rgb, 98 230 255);
+  --ladder-pass: #5be3a6;
+  --ladder-pass-rgb: 91 227 166;
+  --ladder-warn: #ffc56b;
+  --ladder-warn-rgb: 255 197 107;
+  --ladder-fail: #ff7a8a;
+  --ladder-fail-rgb: 255 122 138;
+  --ladder-surface: rgba(10, 17, 43, .82);
+  --ladder-inset: rgba(255, 255, 255, .03);
+  --ladder-popover: #0f1838;
+  /* 和步骤条上各步的颜色一致：做实验绿、看理论青、猜想紫。 */
+  --run-rgb: 24 150 96;
+  --theory-rgb: 12 140 165;
+  --guess-rgb: 124 92 224;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  color: var(--ink, #f4f8ff);
+  font-size: var(--font-body);
+}
+
+.ladder-page button,
+.ladder-page input,
+.ladder-page textarea {
+  font: inherit;
+}
+
+.ladder-page h2,
+.ladder-page h3 {
+  margin: 0;
+}
+
+.ladder-workbench {
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(220px, .62fr) minmax(360px, 1.3fr) minmax(330px, 1.05fr);
+  gap: clamp(7px, .82vw, 11px);
+}
+
+/* Panels */
+
+.ladder-panel {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .2);
+  border-radius: var(--radius-panel);
+  background:
+    linear-gradient(145deg, rgb(var(--ladder-accent-rgb) / .07), transparent 38%),
+    var(--ladder-surface);
+  box-shadow: 0 15px 36px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .04);
+}
+
+.ladder-panel > header {
+  flex: none;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgb(var(--ladder-accent-rgb) / .14);
+  background: linear-gradient(100deg, rgb(var(--ladder-accent-rgb) / .13), rgb(154 139 255 / .05) 60%, transparent);
+}
+
+.ladder-panel > header > span {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 36px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 8px;
+  color: #04121d;
+  background: linear-gradient(135deg, var(--ladder-accent), #9a8bff);
+  box-shadow: 0 4px 12px rgb(var(--ladder-accent-rgb) / .28);
+  font: 800 11px/1 ui-monospace, monospace;
+  letter-spacing: .08em;
+}
+
+.ladder-panel > header > div {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.ladder-panel > header strong,
+.ladder-panel > header h2 {
+  font-size: 16px;
+  letter-spacing: .02em;
+}
+
+.ladder-panel > header small {
+  color: var(--ink-faint, #7180a6);
+  font-size: 12px;
+}
+
+.ladder-panel__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 10px 12px 12px;
+}
+
+/* Shared controls */
+
+.ladder-page button {
+  cursor: pointer;
+  min-height: 30px;
+  padding: 4px 10px;
+  border: 1px solid rgba(145, 166, 226, .2);
+  border-radius: 6px;
+  color: var(--ink-soft, #aeb9d8);
+  background: var(--ladder-inset);
+  line-height: 1.3;
+  text-align: left;
+}
+
+.ladder-page button:hover:not(:disabled) {
+  color: var(--ink, #f4f8ff);
+  border-color: rgb(var(--ladder-accent-rgb) / .4);
+}
+
+.ladder-page button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.ladder-page button[aria-pressed="true"] {
+  color: var(--ink, #f4f8ff);
+  border-color: rgb(var(--ladder-accent-rgb) / .6);
+  background: rgb(var(--ladder-accent-rgb) / .16);
+}
+
+.ladder-page button.is-primary {
+  justify-self: start;
+  color: #04121d;
+  border-color: transparent;
+  background: var(--ladder-accent);
+  font-weight: 650;
+  text-align: center;
+}
+
+.ladder-page button.is-primary:hover:not(:disabled) {
+  color: #04121d;
+  filter: brightness(1.08);
+}
+
+.ladder-page button:focus-visible,
+.ladder-page input:focus-visible,
+.ladder-page textarea:focus-visible,
+.ladder-page a:focus-visible {
+  outline: 2px solid var(--ladder-accent);
+  outline-offset: 2px;
+}
+
+.ladder-page .ladder-link {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  color: var(--ladder-accent);
+  background: none;
+  font-size: var(--font-caption);
+  text-decoration: underline;
+}
+
+.ladder-page a {
+  color: var(--ladder-accent);
+}
+
+.ladder-muted {
+  margin: 0;
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  line-height: 1.45;
+}
+
+.ladder-warning {
+  margin: 0;
+  padding: 6px 9px;
+  border-left: 3px solid var(--ladder-warn);
+  border-radius: 4px;
+  color: var(--ink, #f4f8ff);
+  background: rgb(var(--ladder-warn-rgb) / .08);
+  font-size: var(--font-small);
+}
+
+.ladder-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ladder-chips button {
+  min-height: 28px;
+  padding: 3px 9px;
+  font-size: var(--font-small);
+  text-align: center;
+}
+
+/* Rail */
+
+.ladder-rail .ladder-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ladder-levels {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ladder-levels button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 9px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.ladder-levels button:hover:not(:disabled) {
+  transform: translateX(2px);
+}
+
+.ladder-levels b {
+  display: grid;
+  place-items: center;
+  height: 30px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .35);
+  border-radius: 9px;
+  color: var(--ladder-accent);
+  background: rgb(var(--ladder-accent-rgb) / .08);
+  font: 800 12px/1 ui-monospace, monospace;
+}
+
+.ladder-levels .ladder-pips {
+  display: flex;
+  gap: 3px;
+}
+
+.ladder-pips i {
+  width: 11px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(145, 166, 226, .2);
+}
+
+.ladder-pips i.is-lit {
+  background: var(--ladder-accent);
+}
+
+.ladder-levels button.is-done .ladder-pips i.is-lit {
+  background: var(--ladder-pass);
+}
+
+.ladder-levels span {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  color: var(--ink, #f4f8ff);
+  font-size: var(--font-small);
+  font-weight: 650;
+}
+
+.ladder-levels small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+
+.ladder-levels button[aria-current="step"] {
+  border-color: rgb(var(--ladder-accent-rgb) / .65);
+  background: linear-gradient(100deg, rgb(var(--ladder-accent-rgb) / .2), rgb(var(--ladder-accent-rgb) / .05));
+  box-shadow: 0 6px 18px rgb(var(--ladder-accent-rgb) / .16);
+}
+
+.ladder-levels button[aria-current="step"] b {
+  color: #04121d;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--ladder-accent), #9a8bff);
+}
+
+.ladder-levels button.is-done b {
+  color: #04121d;
+  border-color: transparent;
+  background: var(--ladder-pass);
+}
+
+/* 假设清单：放在左侧面板下方。 */
+
+.ladder-assumptions {
+  margin-top: auto;
+  display: grid;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line, rgba(145, 166, 226, .16));
+}
+
+.ladder-assumptions h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--font-body);
+}
+
+.ladder-assumptions h2 small {
+  margin-left: auto;
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+
+.ladder-assumptions ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ladder-assumptions li {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 7px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--ladder-inset);
+  font-size: var(--font-small);
+  line-height: 1.35;
+}
+
+.ladder-assumptions li b {
+  display: grid;
+  place-items: center;
+  height: 22px;
+  border-radius: 7px;
+  color: var(--ladder-accent);
+  background: rgb(var(--ladder-accent-rgb) / .12);
+  font: 800 11px/1 ui-monospace, monospace;
+}
+
+.ladder-assumptions li span {
+  display: grid;
+  gap: 1px;
+}
+
+.ladder-assumptions li small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+}
+
+.ladder-assumption-mark {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  color: #fff;
+  font: 800 11px/1 system-ui, sans-serif;
+  font-style: normal;
+}
+
+.ladder-assumption-mark.is-held {
+  background: #2fa86b;
+}
+
+.ladder-assumption-mark.is-broken {
+  background: #e5484d;
+}
+
+.ladder-assumption-mark.is-unknown {
+  color: var(--ink-faint, #7180a6);
+  background: rgb(var(--ladder-accent-rgb) / .14);
+}
+
+.ladder-lab__footer {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--line, rgba(145, 166, 226, .16));
+}
+
+.ladder-lab__footer button {
+  min-height: 0;
+  padding: 3px 8px;
+  font-size: var(--font-caption);
+}
+
+/* Main: steps */
+
+.ladder-steps {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  margin: 16px 10px 10px;
+  padding: 4px;
+  border-radius: 14px;
+  background: rgb(var(--ladder-accent-rgb) / .08);
+  box-shadow: inset 0 0 0 1px rgb(var(--ladder-accent-rgb) / .1);
+}
+
+/* 分段式切换：每一步有自己的颜色，选中时整块填色。 */
+.ladder-steps button {
+  --seg-rgb: 37 120 220;
+  min-height: 0;
+  padding: 8px 2px;
+  border-color: transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-soft, #a9b6d6);
+  font-size: clamp(13px, .98vw, 15px);
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  transition: background .15s, color .15s, box-shadow .15s;
+}
+
+.ladder-steps button[data-step="situation"] { --seg-rgb: 37 120 220; }
+.ladder-steps button[data-step="guess"] { --seg-rgb: 124 92 224; }
+.ladder-steps button[data-step="assumption"] { --seg-rgb: 205 70 140; }
+.ladder-steps button[data-step="parameters"] { --seg-rgb: 196 90 10; }
+.ladder-steps button[data-step="experiment"] { --seg-rgb: 24 150 96; }
+.ladder-steps button[data-step="theory"] { --seg-rgb: 12 140 165; }
+.ladder-steps button[data-step="check"] { --seg-rgb: 214 69 85; }
+
+.ladder-steps button:disabled {
+  opacity: .45;
+}
+
+.ladder-steps button.is-done {
+  color: var(--ink, #f4f8ff);
+}
+
+.ladder-steps button:not(:disabled):not([aria-current="step"]):hover {
+  background: rgb(var(--seg-rgb) / .16);
+}
+
+.ladder-steps button[aria-current="step"],
+.ladder-page .ladder-steps button[aria-current="step"]:hover:not(:disabled) {
+  border-color: transparent;
+  color: #fff;
+  background: rgb(var(--seg-rgb));
+  box-shadow: 0 3px 10px rgb(var(--seg-rgb) / .38);
+}
+
+.ladder-main__footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid rgb(var(--ladder-accent-rgb) / .12);
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+}
+
+.ladder-main__footer button {
+  text-align: center;
+}
+
+.ladder-main__footer button.is-primary {
+  justify-self: auto;
+}
+
+.ladder-step {
+  display: grid;
+  gap: 10px;
+  font-size: var(--font-body);
+  line-height: 1.6;
+}
+
+.ladder-step p {
+  margin: 0;
+}
+
+.ladder-recap {
+  justify-self: start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: var(--ink-soft, #aeb9d8);
+  background: var(--ladder-inset);
+  font-size: var(--font-small) !important;
+}
+
+.ladder-question {
+  padding: 10px 14px 11px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .28);
+  border-left: 4px solid var(--ladder-accent);
+  border-radius: 10px;
+  background: linear-gradient(100deg, rgb(var(--ladder-accent-rgb) / .14), rgb(var(--ladder-accent-rgb) / .03));
+  font-size: 1.08em;
+  font-weight: 700;
+}
+
+.ladder-question::before {
+  content: "想一想";
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ladder-accent);
+  font-size: var(--font-caption);
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+
+.ladder-guess {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.ladder-guess input {
+  width: 6em;
+  padding: 7px 10px;
+  border: 2px solid rgb(var(--ladder-accent-rgb) / .4);
+  border-radius: 10px;
+  color: var(--ink, #f4f8ff);
+  background: rgba(0, 0, 0, .18);
+  font-size: 1.5em;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.ladder-locked {
+  padding: 10px 14px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .3);
+  border-radius: 10px;
+  background: rgb(var(--ladder-accent-rgb) / .08);
+}
+
+/* “设置参数”：本级任务面板 + 小提示条。橙色和步骤条上这一步的颜色一致。 */
+.ladder-brief {
+  --brief-rgb: 196 90 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px 13px 12px;
+  border: 1px solid rgb(var(--brief-rgb) / .3);
+  border-radius: 16px;
+  background:
+    radial-gradient(120% 160% at 100% 0, rgb(var(--brief-rgb) / .14), transparent 55%),
+    linear-gradient(100deg, rgb(var(--brief-rgb) / .1), rgb(var(--brief-rgb) / .03));
+  box-shadow: 0 6px 16px rgb(var(--brief-rgb) / .1), inset 0 1px rgba(255, 255, 255, .06);
+}
+
+.ladder-brief__badge {
+  flex: none;
+  width: 2.5em;
+  height: 2.5em;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #f09a3c, #c45a0a);
+  box-shadow: 0 4px 10px rgb(var(--brief-rgb) / .35);
+}
+
+.ladder-brief__badge svg,
+.ladder-tip__icon svg {
+  width: 1.4em;
+  height: 1.4em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ladder-brief__body {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.ladder-brief__tag {
+  justify-self: start;
+  padding: 1px 10px;
+  border-radius: 999px;
+  color: #ffb067;
+  background: rgb(var(--brief-rgb) / .2);
+  font-size: var(--font-caption);
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+
+.ladder-brief p {
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+.ladder-tip {
+  --tip-rgb: 196 90 10;
+  --tip-ink: #ffb067;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 9px;
+  border: 1px dashed rgb(var(--tip-rgb) / .45);
+  border-radius: 12px;
+  color: var(--ink-soft, #aeb9d8);
+  background: rgb(var(--tip-rgb) / .06);
+  font-size: var(--font-small);
+  line-height: 1.55;
+}
+
+.ladder-tip.is-fixed {
+  --tip-rgb: var(--ladder-accent-rgb);
+  --tip-ink: var(--ladder-accent);
+}
+
+.ladder-tip.is-run {
+  --tip-rgb: var(--run-rgb);
+  --tip-ink: var(--ladder-pass);
+}
+
+.ladder-tip__icon {
+  flex: none;
+  width: 1.9em;
+  height: 1.9em;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--tip-ink);
+  background: rgb(var(--tip-rgb) / .18);
+}
+
+.ladder-tip__icon svg {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.ladder-locked b {
+  color: var(--ladder-accent);
+  font-size: 1.5em;
+}
+
+.ladder-locked .ladder-link {
+  margin-left: 12px;
+}
+
+/* 找假设的句子：每行一句，行高比普通按钮高一点；交了答案之后“A1 / 不是”的小字排在这一行的右端。 */
+.ladder-statements {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ladder-statements button {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 12px;
+  font-size: var(--font-small);
+}
+
+.ladder-statements button small {
+  font-size: var(--font-caption);
+}
+
+.ladder-statements button.is-right:disabled,
+.ladder-statements button.is-wrong:disabled {
+  opacity: 1;
+}
+
+.ladder-statements button.is-right {
+  border-color: rgb(var(--ladder-pass-rgb) / .5);
+}
+
+.ladder-statements button.is-right small {
+  color: var(--ladder-pass);
+}
+
+.ladder-statements button.is-wrong {
+  border-color: rgb(var(--ladder-fail-rgb) / .6);
+  background: rgb(var(--ladder-fail-rgb) / .08);
+}
+
+.ladder-statements button.is-wrong small {
+  color: var(--ladder-fail);
+}
+
+.ladder-picks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.ladder-picks button {
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: var(--font-small);
+}
+
+.ladder-picks button b {
+  display: inline-block;
+  min-width: 26px;
+  margin-right: 6px;
+  padding: 1px 0;
+  border-radius: 6px;
+  color: var(--ladder-accent);
+  background: rgb(var(--ladder-accent-rgb) / .12);
+  font: 800 11px/1.5 ui-monospace, monospace;
+  text-align: center;
+}
+
+.ladder-feedback {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 10px 14px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .22);
+  border-radius: 14px;
+  background: rgb(var(--ladder-accent-rgb) / .05);
+  font-size: var(--font-small);
+  line-height: 1.55;
+}
+
+.ladder-feedback > strong {
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  font-size: 1.08em;
+}
+
+.ladder-feedback > strong > .ladder-icon {
+  width: 1.3em;
+  height: 1.3em;
+}
+
+.ladder-feedback.is-right {
+  border-color: rgb(var(--ladder-pass-rgb) / .4);
+  background: linear-gradient(100deg, rgb(var(--ladder-pass-rgb) / .13), rgb(var(--ladder-pass-rgb) / .04));
+}
+
+.ladder-feedback.is-right > strong {
+  color: var(--ladder-pass);
+}
+
+.ladder-feedback.is-wrong {
+  border-color: rgb(var(--ladder-warn-rgb) / .4);
+  background: linear-gradient(100deg, rgb(var(--ladder-warn-rgb) / .13), rgb(var(--ladder-warn-rgb) / .04));
+}
+
+.ladder-feedback.is-wrong > strong {
+  color: var(--ladder-warn);
+}
+
+.ladder-feedback p {
+  margin: 0;
+}
+
+/* 做实验：猜想和实验结果并排对比。 */
+.ladder-vs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .22);
+  border-radius: 16px;
+  background: linear-gradient(120deg, rgb(var(--guess-rgb) / .1), rgb(var(--run-rgb) / .1));
+}
+
+.ladder-vs__side {
+  display: grid;
+  gap: 1px;
+  padding: 8px 14px 9px;
+  border-radius: 12px;
+  border-left: 4px solid var(--side-color);
+  background: var(--ladder-surface);
+}
+
+.ladder-vs__side.is-guess { --side-color: rgb(var(--guess-rgb)); }
+.ladder-vs__side.is-result { --side-color: rgb(var(--run-rgb)); }
+
+.ladder-vs__side > span {
+  color: var(--side-ink);
+  font-size: var(--font-caption);
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.ladder-vs__side.is-guess { --side-ink: #b3a6ff; }
+.ladder-vs__side.is-result { --side-ink: var(--ladder-pass); }
+
+.ladder-vs__side > b {
+  font-size: 1.6em;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
+
+.ladder-vs__mid {
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, rgb(var(--guess-rgb)), rgb(var(--run-rgb)));
+  font-size: var(--font-caption);
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.ladder-vs__note {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 10px;
+  color: var(--ladder-warn);
+  background: rgb(var(--ladder-warn-rgb) / .1);
+  font-size: var(--font-small);
+}
+
+/* 看理论：要点编号卡片、公式卡片、结论提示。 */
+.ladder-ideas {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: idea;
+}
+
+.ladder-ideas li {
+  position: relative;
+  counter-increment: idea;
+  padding: 9px 14px 9px 48px;
+  border: 1px solid rgb(var(--theory-rgb) / .24);
+  border-radius: 14px;
+  background: linear-gradient(100deg, rgb(var(--theory-rgb) / .09), rgb(var(--theory-rgb) / .02));
+  line-height: 1.65;
+}
+
+.ladder-ideas li::before {
+  content: counter(idea);
+  position: absolute;
+  top: 9px;
+  left: 12px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #22b8d6, #0c8ca5);
+  box-shadow: 0 3px 8px rgb(var(--theory-rgb) / .35);
+  font-size: .9em;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ladder-formula {
+  position: relative;
+  padding-top: 11px;
+}
+
+.ladder-formula__tag {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  z-index: 1;
+  padding: 1px 12px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, rgb(var(--theory-rgb)), rgb(var(--guess-rgb)));
+  box-shadow: 0 3px 8px rgb(var(--theory-rgb) / .3);
+  font-size: var(--font-caption);
+  font-weight: 800;
+  letter-spacing: .2em;
+}
+
+.ladder-page .ladder-formula .learning-formula-group { margin: 0; }
+
+.ladder-page .ladder-formula .learning-formula-group > .learning-formula {
+  margin: 0;
+  padding: 26px 16px 20px;
+  border: 1px solid rgb(var(--theory-rgb) / .38);
+  border-radius: 16px;
+  background:
+    radial-gradient(90% 120% at 100% 0, rgb(var(--guess-rgb) / .12), transparent 60%),
+    linear-gradient(135deg, rgb(var(--theory-rgb) / .14), rgb(var(--theory-rgb) / .04));
+  box-shadow: 0 6px 18px rgb(var(--theory-rgb) / .14), inset 0 1px rgba(255, 255, 255, .08);
+}
+
+.ladder-insight {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgb(var(--ladder-warn-rgb) / .32);
+  border-radius: 14px;
+  background: linear-gradient(100deg, rgb(var(--ladder-warn-rgb) / .13), rgb(var(--ladder-warn-rgb) / .03));
+  font-size: var(--font-small);
+  line-height: 1.65;
+}
+
+.ladder-insight__icon {
+  flex: none;
+  width: 1.9em;
+  height: 1.9em;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--ladder-warn);
+  background: rgb(var(--ladder-warn-rgb) / .18);
+}
+
+.ladder-insight__icon .ladder-icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.ladder-compare,
+.ladder-stats,
+.ladder-setting {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+.ladder-compare {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ladder-compare > div,
+.ladder-stats > div,
+.ladder-setting > div {
+  padding: 7px 10px;
+  border: 1px solid var(--line, rgba(145, 166, 226, .16));
+  border-radius: 10px;
+  background: var(--ladder-inset);
+  font-size: var(--font-small);
+  line-height: 1.4;
+}
+
+.ladder-compare dt,
+.ladder-stats dt,
+.ladder-setting dt {
+  color: var(--ladder-accent);
+  font-size: var(--font-caption);
+  font-weight: 650;
+}
+
+.ladder-compare dd,
+.ladder-stats dd,
+.ladder-setting dd {
+  display: grid;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ladder-compare dd,
+.ladder-stats dd {
+  font-size: 1.3em;
+  font-weight: 750;
+}
+
+/* 看理论：猜想、实验、理论值三块，理论值那块标成绿色。 */
+.ladder-compare > div:nth-child(3) {
+  border-color: rgb(var(--ladder-pass-rgb) / .45);
+  background: linear-gradient(135deg, rgb(var(--ladder-pass-rgb) / .14), rgb(var(--ladder-pass-rgb) / .04));
+}
+
+.ladder-compare > div:nth-child(3) dt {
+  color: var(--ladder-pass);
+}
+
+.ladder-compare dd small,
+.ladder-stats dd small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+
+.ladder-subsection {
+  display: grid;
+  gap: 7px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line, rgba(145, 166, 226, .16));
+}
+
+.ladder-subsection:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.ladder-subsection h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--ladder-accent);
+  font-size: var(--font-small);
+}
+
+.ladder-subsection h3 small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+
+/* 做检验：两块卡片（退化检验、三道检验）和最后的“完成”一行。 */
+.ladder-subsection.is-card {
+  gap: 10px;
+  padding: 14px 16px 16px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .2);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgb(var(--ladder-accent-rgb) / .06), transparent 55%), var(--ladder-inset);
+}
+
+.ladder-subsection.is-card h3 {
+  align-items: center;
+  gap: 10px;
+  color: var(--ink, #f4f8ff);
+  font-size: 1.1em;
+  font-weight: 800;
+}
+
+.ladder-subsection.is-card h3 small {
+  font-size: var(--font-small);
+}
+
+.ladder-subsection__icon {
+  flex: none;
+  width: 1.9em;
+  height: 1.9em;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, #3a8cf0, #2569d0);
+  box-shadow: 0 3px 9px rgba(37, 105, 208, .35);
+}
+
+.ladder-subsection__icon.is-shield {
+  background: linear-gradient(135deg, #34cf8f, #12875a);
+  box-shadow: 0 3px 9px rgb(var(--run-rgb) / .35);
+}
+
+.ladder-subsection__icon .ladder-icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.ladder-subsection__prompt {
+  font-size: 1.04em;
+  font-weight: 600;
+}
+
+.ladder-finish {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgb(var(--ladder-accent-rgb) / .28);
+}
+
+.ladder-page button.ladder-go.is-wide {
+  padding: 8px 18px;
+  font-size: var(--font-body);
+}
+
+/* 三道检验（和“自由提条件”共用的组件）：只在建模阶梯里换成圆角卡片。 */
+.ladder-page .three-checks {
+  gap: 14px;
+  padding-top: 0;
+}
+
+.ladder-page .three-checks > h2 {
+  align-items: center;
+  font-size: var(--font-body);
+  font-weight: 800;
+}
+
+.ladder-page .three-checks > h2 small {
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: var(--checks-pass);
+  background: rgb(var(--checks-pass-rgb) / .14);
+  font-size: var(--font-small);
+  font-weight: 700;
+}
+
+.ladder-page .three-checks__group {
+  gap: 8px;
+}
+
+.ladder-page .three-checks__group h3 {
+  font-size: var(--font-body);
+  font-weight: 800;
+}
+
+.ladder-page .three-checks__group h3 small {
+  font-size: var(--font-small);
+}
+
+.ladder-page .three-checks__group li {
+  gap: 3px 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(145, 166, 226, .18);
+  border-left: 4px solid var(--ink-faint, #7180a6);
+  border-radius: 12px;
+}
+
+.ladder-page .three-checks__group li.is-passed { border-color: rgb(var(--checks-pass-rgb) / .3); border-left-color: var(--checks-pass); background: rgb(var(--checks-pass-rgb) / .06); }
+.ladder-page .three-checks__group li.is-failed { border-color: rgb(var(--checks-fail-rgb) / .3); border-left-color: var(--checks-fail); }
+
+.ladder-page .three-checks__group li em {
+  padding: 2px 11px;
+  border-radius: 999px;
+  font-size: var(--font-small);
+  font-weight: 800;
+}
+
+.ladder-page .three-checks__group li.is-passed em::before { content: "✓ "; }
+.ladder-page .three-checks__group li.is-failed em::before { content: "✕ "; }
+
+.ladder-page .three-checks__group li strong {
+  font-size: var(--font-body);
+}
+
+.ladder-page .three-checks__group li small {
+  font-size: var(--font-small);
+  line-height: 1.6;
+}
+
+/* Lab */
+
+.ladder-lab__block {
+  display: grid;
+  gap: 8px;
+  padding: 10px 11px;
+  border: 1px solid var(--line, rgba(145, 166, 226, .16));
+  border-radius: 12px;
+  background: var(--ladder-inset);
+}
+
+.ladder-lab__block h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--font-body);
+}
+
+.ladder-lab__block.is-setting h3::before { content: "🧩"; }
+.ladder-lab__block.is-controls h3::before { content: "🎛️"; }
+.ladder-lab__block.is-run h3::before { content: "🧪"; }
+.ladder-theory-box h3::before { content: "📐"; }
+
+.ladder-lab__block h3 small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  font-weight: 400;
+}
+
+.ladder-setting > div {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr);
+  gap: 6px;
+}
+
+.ladder-control {
+  display: grid;
+  gap: 4px;
+  color: var(--ink-soft, #aeb9d8);
+  font-size: var(--font-small);
+}
+
+.ladder-control > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ladder-control > span b {
+  color: var(--ladder-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.ladder-control input[type="range"] {
+  width: 100%;
+  accent-color: var(--ladder-accent);
+}
+
+/* 做实验：轮数分段切换 + 开始按钮 + 换种子按钮。绿色（--run-rgb）和步骤条上“做实验”一致；
+   .ladder-go / .ladder-ghost / .ladder-segmented 也用在开盒演示和做检验里。 */
+.ladder-run {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.ladder-run button {
+  text-align: center;
+}
+
+/* 轮数切换、开始、换种子排在一行；放不下时才折到下一行。按钮按文字宽度，不拉满整行。 */
+.ladder-run > .ladder-go,
+.ladder-run > .ladder-ghost {
+  flex: 0 0 auto;
+}
+
+.ladder-segmented {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 12px;
+  background: rgb(var(--ladder-accent-rgb) / .08);
+  box-shadow: inset 0 0 0 1px rgb(var(--ladder-accent-rgb) / .1);
+}
+
+.ladder-page .ladder-segmented button {
+  min-height: 0;
+  padding: 5px 9px;
+  border: 0;
+  border-radius: 9px;
+  color: var(--ink-soft, #aeb9d8);
+  background: transparent;
+  font-size: var(--font-small);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition: background .15s, color .15s, box-shadow .15s;
+}
+
+.ladder-page .ladder-segmented button:hover:not(:disabled):not([aria-pressed="true"]) {
+  color: var(--ink, #f4f8ff);
+  background: rgb(var(--run-rgb) / .16);
+}
+
+.ladder-page .ladder-segmented button[aria-pressed="true"] {
+  color: #fff;
+  background: rgb(var(--run-rgb));
+  box-shadow: 0 3px 10px rgb(var(--run-rgb) / .38);
+}
+
+/* 按钮按文字宽度；放在网格里时靠左，不被拉满整行（例如“运行三道检验”）。 */
+.ladder-page button.ladder-go,
+.ladder-page button.ladder-ghost {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4em;
+  min-height: 0;
+  padding: 5px 12px;
+  border-radius: 11px;
+  font-size: var(--font-small);
+  white-space: nowrap;
+  transition: transform .15s, box-shadow .15s, background .15s, filter .15s;
+}
+
+.ladder-page button.ladder-go {
+  border: 0;
+  color: #fff;
+  background: linear-gradient(135deg, #34cf8f, #12875a);
+  box-shadow: 0 4px 10px rgb(var(--run-rgb) / .34), inset 0 1px rgba(255, 255, 255, .3);
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+.ladder-page button.ladder-go:hover:not(:disabled) {
+  color: #fff;
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgb(var(--run-rgb) / .42), inset 0 1px rgba(255, 255, 255, .3);
+}
+
+.ladder-page button.ladder-go:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgb(var(--run-rgb) / .3), inset 0 1px rgba(255, 255, 255, .3);
+}
+
+.ladder-page button.ladder-ghost {
+  border: 1px solid rgb(var(--run-rgb) / .42);
+  color: var(--ladder-pass);
+  background: rgb(var(--run-rgb) / .08);
+  font-weight: 700;
+}
+
+.ladder-page button.ladder-ghost:hover:not(:disabled),
+.ladder-page button.ladder-ghost[aria-pressed="true"] {
+  color: var(--ladder-pass);
+  border-color: rgb(var(--run-rgb) / .7);
+  background: rgb(var(--run-rgb) / .16);
+}
+
+.ladder-page button.ladder-ghost[aria-pressed="true"] {
+  background: rgb(var(--run-rgb) / .24);
+}
+
+.ladder-icon {
+  flex: none;
+  width: 1.2em;
+  height: 1.2em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .25s ease;
+}
+
+.ladder-page button.ladder-ghost:hover:not(:disabled) .ladder-icon {
+  transform: rotate(18deg);
+}
+
+.ladder-icon.is-spinning {
+  animation: ladder-spin .9s linear infinite;
+}
+
+@keyframes ladder-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ladder-page button.ladder-go,
+  .ladder-page button.ladder-ghost,
+  .ladder-icon { transition: none; }
+  .ladder-icon.is-spinning { animation: none; }
+  .ladder-page button.ladder-go:hover:not(:disabled),
+  .ladder-page button.ladder-go:active:not(:disabled),
+  .ladder-page button.ladder-ghost:hover:not(:disabled) .ladder-icon { transform: none; }
+}
+
+.ladder-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ladder-stats > div.is-highlight {
+  grid-column: 1 / -1;
+  border-color: rgb(var(--ladder-warn-rgb) / .38);
+  background: linear-gradient(100deg, rgb(var(--ladder-warn-rgb) / .16), rgb(var(--ladder-warn-rgb) / .04));
+}
+
+.ladder-histogram {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.ladder-histogram svg {
+  width: 100%;
+  height: auto;
+  max-height: 210px;
+}
+
+.ladder-histogram {
+  padding: 8px 8px 6px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .14);
+}
+
+.ladder-histogram__stop.is-top { stop-color: rgb(var(--ladder-accent-rgb)); stop-opacity: .95; }
+.ladder-histogram__stop.is-bottom { stop-color: #8a7bff; stop-opacity: .5; }
+.ladder-histogram__stop.is-warn-top { stop-color: rgb(var(--ladder-warn-rgb)); stop-opacity: .95; }
+.ladder-histogram__stop.is-warn-bottom { stop-color: rgb(var(--ladder-warn-rgb)); stop-opacity: .45; }
+
+.ladder-histogram rect {
+  fill: url(#ladder-bar-fill);
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: ladder-bar-grow .6s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.ladder-histogram rect.is-not-reached {
+  fill: url(#ladder-bar-warn);
+}
+
+@keyframes ladder-bar-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.ladder-histogram__axis {
+  stroke: rgba(145, 166, 226, .4);
+}
+
+.ladder-histogram__tick,
+.ladder-histogram__marker text {
+  fill: var(--ink-faint, #7180a6);
+  font-size: 10px;
+}
+
+.ladder-histogram__marker line {
+  stroke-width: 1.5;
+}
+
+.ladder-histogram__marker.is-guess line { stroke: #b6a6ff; stroke-dasharray: 4 3; }
+.ladder-histogram__marker.is-guess text { fill: #b6a6ff; }
+.ladder-histogram__marker.is-theory line { stroke: var(--ladder-pass); }
+.ladder-histogram__marker.is-theory text { fill: var(--ladder-pass); }
+.ladder-histogram__marker.is-within line { stroke: var(--ladder-warn); stroke-dasharray: 2 2; }
+.ladder-histogram__marker.is-within text { fill: var(--ladder-warn); }
+.ladder-histogram__marker.is-truth line { stroke: var(--ladder-accent); }
+.ladder-histogram__marker.is-truth text { fill: var(--ladder-accent); }
+
+.ladder-histogram figcaption {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  line-height: 1.4;
+}
+
+.ladder-theory-box p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+}
+
+.ladder-theory-box p span {
+  color: var(--ink-soft, #aeb9d8);
+  font-size: var(--font-small);
+}
+
+.ladder-theory-box {
+  border-color: rgb(var(--ladder-pass-rgb) / .4);
+  background: linear-gradient(120deg, rgb(var(--ladder-pass-rgb) / .14), rgb(var(--ladder-pass-rgb) / .03));
+}
+
+.ladder-theory-box strong {
+  color: var(--ladder-pass);
+  font-size: clamp(22px, 2vw, 32px);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 16px rgb(var(--ladder-pass-rgb) / .35);
+}
+
+/* Main header badge and story */
+
+.ladder-main__head > em {
+  flex: none;
+  padding: 3px 10px;
+  border: 1px solid rgb(var(--ladder-warn-rgb) / .5);
+  border-radius: 999px;
+  color: var(--ladder-warn);
+  background: rgb(var(--ladder-warn-rgb) / .1);
+  font-size: var(--font-caption);
+  font-style: normal;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ladder-main__head > em.is-ideal {
+  border-color: rgb(var(--ladder-pass-rgb) / .5);
+  color: var(--ladder-pass);
+  background: rgb(var(--ladder-pass-rgb) / .1);
+}
+
+/* 标题栏最右边的“重新开始”：只重来当前这一级；确认框悬在按钮下面，不撑开标题栏。 */
+.ladder-restart {
+  position: relative;
+  flex: none;
+  margin-left: auto;
+}
+
+.ladder-page .ladder-restart__button {
+  display: inline-flex;
+  align-items: center;
+  gap: .4em;
+  min-height: 0;
+  padding: 4px 11px;
+  border-radius: 999px;
+  color: var(--ink-soft, #aeb9d8);
+  font-size: var(--font-caption);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ladder-restart__icon {
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .3s ease;
+}
+
+.ladder-page .ladder-restart__button:hover:not(:disabled) .ladder-restart__icon {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ladder-restart__icon { transition: none; }
+  .ladder-page .ladder-restart__button:hover:not(:disabled) .ladder-restart__icon { transform: none; }
+}
+
+.ladder-restart__confirm {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 8px);
+  right: 0;
+  width: max-content;
+  max-width: min(260px, 70vw);
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgb(var(--ladder-warn-rgb) / .5);
+  border-radius: 12px;
+  background: var(--ladder-popover);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .35);
+}
+
+.ladder-restart__confirm p {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  color: var(--ladder-warn);
+  font-size: var(--font-small);
+  font-weight: 700;
+}
+
+.ladder-restart__confirm small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.ladder-restart__confirm div {
+  display: flex;
+  gap: 6px;
+}
+
+.ladder-page .ladder-restart__confirm button {
+  min-height: 0;
+  padding: 3px 10px;
+  font-size: var(--font-caption);
+}
+
+.ladder-page .ladder-restart__confirm button.is-danger {
+  border-color: rgb(var(--ladder-fail-rgb) / .55);
+  color: var(--ladder-fail);
+  background: rgb(var(--ladder-fail-rgb) / .1);
+}
+
+/* 情境：问题的故事和“想一想”放在同一个面板里；上方多留一截空白，标签压在面板上沿。 */
+.ladder-situation {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 22px 16px 14px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .3);
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgb(var(--ladder-accent-rgb) / .14), transparent 58%),
+    var(--ladder-inset);
+  box-shadow: 0 8px 22px rgb(var(--ladder-accent-rgb) / .1);
+}
+
+.ladder-situation__tag {
+  position: absolute;
+  top: -11px;
+  left: 14px;
+  padding: 2px 12px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .4);
+  border-radius: 999px;
+  color: var(--ladder-accent);
+  background: var(--ladder-surface);
+  font-size: var(--font-caption);
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+/* 货架：整整齐齐摆一排盲盒，随机有一两盒已经拆开，露出里面的神兽，名字贴在货架边上。 */
+.situation-shelf {
+  display: grid;
+  padding: 14px 0 26px;
+  border-bottom: 1px dashed rgb(var(--ladder-accent-rgb) / .28);
+}
+
+.situation-shelf__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  width: min(100%, calc(var(--cols) * 64px));
+  margin-inline: auto;
+  align-items: end;
+  gap: 10px;
+  padding: 0 14px 8px;
+}
+
+.situation-shelf__row::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, rgb(var(--ladder-accent-rgb) / .44), rgb(var(--ladder-accent-rgb) / .12));
+  box-shadow: 0 5px 10px rgb(var(--ladder-accent-rgb) / .14);
+}
+
+.situation-shelf__slot {
+  position: relative;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+}
+
+.situation-shelf__slot img {
+  width: 100%;
+  aspect-ratio: 86 / 92;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 5px rgba(0, 0, 0, .26));
+  pointer-events: none;
+  user-select: none;
+}
+
+.situation-shelf__slot.is-open::before {
+  content: "";
+  position: absolute;
+  inset: -18% -26% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--accent) 52%, transparent), transparent 68%);
+}
+
+.situation-shelf__slot.is-open::after {
+  content: "✦";
+  position: absolute;
+  top: -12%;
+  right: -14%;
+  color: var(--accent);
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.situation-shelf__slot.is-open .style-glyph {
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  transform: scale(1.18);
+  transform-origin: 50% 100%;
+}
+
+.situation-shelf__slot.is-open em {
+  position: absolute;
+  z-index: 2;
+  bottom: -19px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  border-radius: 999px;
+  background: var(--ladder-surface);
+  font-size: var(--font-caption);
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.ladder-story__bubbles {
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+}
+
+.ladder-story__bubbles p {
+  max-width: 100%;
+  padding: 7px 12px;
+  border: 1px solid var(--line, rgba(145, 166, 226, .16));
+  border-radius: 14px 14px 14px 4px;
+  background: var(--ladder-inset);
+  font-size: var(--font-small);
+}
+
+/* Scene: the model of this level, drawn */
+
+.ladder-scene {
+  --glyph: 66px;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  padding: 12px 10px 9px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .22);
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at 50% 108%, rgb(var(--ladder-accent-rgb) / .18), transparent 62%),
+    var(--ladder-inset);
+}
+
+.ladder-scene__row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 4px;
+}
+
+.ladder-scene__kind {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+.ladder-scene__kind .style-glyph {
+  width: min(var(--glyph), 100%);
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.ladder-scene__name {
+  color: var(--ink, #f4f8ff);
+  font-size: var(--font-caption);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.ladder-scene__kind small {
+  color: var(--ink-soft, #aeb9d8);
+  font-size: var(--font-caption);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 概率柱状图：左边是 0–100% 的纵轴，神兽、名字和概率数值叠在各自柱子的顶上 */
+
+.ladder-scene {
+  --axis-width: 40px;
+  --plot-height: 150px;
+}
+
+.ladder-scene__chart {
+  display: grid;
+  grid-template-columns: var(--axis-width) minmax(0, 1fr);
+  padding-top: 16px;
+}
+
+.ladder-scene__axis {
+  height: var(--plot-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 6px;
+  border-right: 2px solid rgb(var(--ladder-accent-rgb) / .45);
+  color: var(--ink-soft, #aeb9d8);
+  font-size: var(--font-caption);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-align: right;
+}
+
+.ladder-scene__axis span:first-child {
+  transform: translateY(-50%);
+}
+
+.ladder-scene__axis span:last-child {
+  transform: translateY(50%);
+}
+
+.ladder-scene__plot {
+  height: var(--plot-height);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 4px;
+  border-bottom: 2px solid rgb(var(--ladder-accent-rgb) / .45);
+  background: linear-gradient(to right, rgb(var(--ladder-accent-rgb) / .3) 50%, transparent 0) 0 0 / 8px 1px repeat-x;
+}
+
+.ladder-scene__col {
+  position: relative;
+  min-width: 0;
+}
+
+.ladder-scene__col i {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: min(30px, 72%);
+  min-height: 2px;
+  transform: translateX(-50%);
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(to top, color-mix(in srgb, var(--accent), transparent 55%), var(--accent));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent), transparent 62%);
+  transition: height .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+.ladder-scene__pin {
+  position: absolute;
+  right: 0;
+  left: 0;
+  padding-bottom: 3px;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  transition: bottom .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+.ladder-scene__pin .style-glyph {
+  width: min(var(--glyph), 100%);
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.ladder-scene__pin b {
+  margin-top: 16px;
+  color: var(--ink, #f4f8ff);
+  font-size: var(--font-caption);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ladder-scene__col.is-unneeded {
+  opacity: .42;
+  filter: saturate(.5);
+}
+
+.ladder-scene__stack {
+  width: 100%;
+  height: 46px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+.ladder-scene__stack i {
+  width: min(26px, 78%);
+  height: 8px;
+  border: 1px solid color-mix(in srgb, var(--accent), white 20%);
+  border-radius: 3px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--accent), transparent 35%), color-mix(in srgb, var(--accent), transparent 72%));
+}
+
+.ladder-scene__stack em {
+  color: var(--accent);
+  font-size: var(--font-caption);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.ladder-scene__kind.is-unneeded {
+  opacity: .42;
+  filter: saturate(.5);
+}
+
+.ladder-scene__kind.is-unknown {
+  height: calc(var(--glyph) + 62px + 4px);
+  align-content: end;
+  border: 2px dashed rgb(var(--ladder-accent-rgb) / .4);
+  border-radius: 12px;
+  padding: 6px 2px;
+  color: var(--ladder-accent);
+}
+
+.ladder-scene__kind.is-unknown > span {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.ladder-scene.is-mystery .ladder-scene__kind:not(.is-unknown) {
+  align-content: end;
+}
+
+.ladder-scene figcaption {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.ladder-scene__pity,
+.ladder-scene__ruler {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+}
+
+.ladder-scene__pity > span,
+.ladder-scene__pity small,
+.ladder-scene__ruler small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+}
+
+.ladder-scene__pity > div,
+.ladder-scene__ruler > div {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(145, 166, 226, .18);
+}
+
+.ladder-scene__pity > div i {
+  position: absolute;
+  inset: 0 6% 0 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgb(var(--ladder-accent-rgb) / .35), #ffc857);
+}
+
+.ladder-scene__pity > div b {
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-52%);
+  color: #ffc857;
+  font-size: 20px;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(255, 200, 87, .7);
+}
+
+.ladder-scene__ruler > div i {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 16px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--ladder-warn);
+  box-shadow: 0 0 8px rgb(var(--ladder-warn-rgb) / .7);
+}
+
+.ladder-scene__team {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.ladder-scene__team span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px 3px 4px;
+  border: 1px solid rgb(var(--ladder-accent-rgb) / .3);
+  border-radius: 999px;
+  background: rgb(var(--ladder-accent-rgb) / .08);
+  font-size: var(--font-small);
+}
+
+.ladder-scene__team b {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #04121d;
+  background: var(--ladder-accent);
+  font-size: 12px;
+}
+
+.ladder-scene__team small {
+  color: var(--ink-faint, #7180a6);
+  font-size: var(--font-caption);
+}
+
+/* Give the main and lab cards a little more breathing room on taller screens. */
+@media (min-height: 701px) {
+  .ladder-main .ladder-step { gap: 16px; }
+  .ladder-main .ladder-scene { --plot-height: 180px; }
+  .ladder-main .ladder-brief { padding-block: 16px; }
+  .ladder-main .ladder-tip { padding-block: 12px; }
+  .ladder-lab > .ladder-panel__body { gap: 16px; }
+  .ladder-lab .ladder-lab__block { gap: 10px; padding: 14px; }
+}
+
+/* Short windows: tighten the level cards so the rail never needs a scrollbar. */
+
+@media (min-width: 1101px) and (max-height: 700px) {
+  .ladder-rail .ladder-panel__body {
+    gap: 6px;
+    padding-block: 8px;
+  }
+
+  .ladder-levels {
+    gap: 4px;
+  }
+
+  .ladder-levels button {
+    padding: 4px 8px;
+  }
+
+  .ladder-levels b {
+    height: 26px;
+  }
+}
+
+/* Smaller screens: let the page scroll instead of squeezing three columns. */
+
+@media (max-width: 1100px) {
+  .ladder-page {
+    height: auto;
+    min-height: 100%;
+  }
+
+  .ladder-workbench {
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .ladder-panel,
+  .ladder-panel__body {
+    overflow: visible;
+  }
+}
+
+/* Light theme */
+
+/* 字母徽章在浅色背景上：颜色压深、底色加重，才看得清。 */
+:root[data-theme="light"] .kind-glyph:not(.is-hidden-kind) {
+  color: color-mix(in srgb, var(--accent) 58%, #1a2340);
+}
+
+:root[data-theme="light"] .kind-glyph:not(.is-hidden-kind) rect {
+  fill-opacity: .3;
+}
+
+:root[data-theme="light"] .ladder-page {
+  --ladder-pass: #12875a;
+  --ladder-pass-rgb: 18 135 90;
+  --ladder-warn: #a86200;
+  --ladder-warn-rgb: 168 98 0;
+  --ladder-fail: #c2334a;
+  --ladder-fail-rgb: 194 51 74;
+  --ladder-surface: rgba(248, 251, 255, .91);
+  --ladder-inset: rgba(74, 94, 139, .05);
+  --ladder-popover: #fff;
+}
+
+:root[data-theme="light"] .ladder-restart__confirm {
+  box-shadow: 0 12px 28px rgba(55, 70, 108, .22);
+}
+
+:root[data-theme="light"] .ladder-panel {
+  box-shadow: 0 14px 35px rgba(55, 70, 108, .14), inset 0 1px rgba(255, 255, 255, .8);
+}
+
+:root[data-theme="light"] .ladder-guess input {
+  background: rgba(74, 94, 139, .07);
+}
+
+:root[data-theme="light"] .ladder-vs__side.is-guess { --side-ink: #6a52d9; }
+
+:root[data-theme="light"] .ladder-ideas li {
+  background: linear-gradient(100deg, rgb(var(--theory-rgb) / .08), rgba(255, 255, 255, .5));
+}
+
+:root[data-theme="light"] .ladder-insight {
+  background: linear-gradient(100deg, rgb(var(--ladder-warn-rgb) / .12), rgba(255, 255, 255, .5));
+}
+
+:root[data-theme="light"] .ladder-page .three-checks__group li {
+  border-color: rgba(74, 94, 139, .18);
+}
+
+:root[data-theme="light"] .ladder-levels b,
+:root[data-theme="light"] .ladder-assumptions li b,
+:root[data-theme="light"] .ladder-picks button b,
+:root[data-theme="light"] .ladder-compare dt,
+:root[data-theme="light"] .ladder-stats dt,
+:root[data-theme="light"] .ladder-setting dt,
+:root[data-theme="light"] .ladder-subsection h3,
+:root[data-theme="light"] .ladder-control > span b,
+:root[data-theme="light"] .ladder-locked b,
+:root[data-theme="light"] .ladder-page a,
+:root[data-theme="light"] .ladder-page .ladder-link {
+  color: #00708f;
+}
+
+:root[data-theme="light"] .ladder-situation__tag {
+  color: #00708f;
+}
+
+:root[data-theme="light"] .ladder-brief {
+  background:
+    radial-gradient(120% 160% at 100% 0, rgb(var(--brief-rgb) / .12), transparent 55%),
+    linear-gradient(100deg, rgb(var(--brief-rgb) / .08), rgb(var(--brief-rgb) / .02)),
+    rgba(255, 255, 255, .6);
+  box-shadow: 0 6px 16px rgb(var(--brief-rgb) / .12), inset 0 1px rgba(255, 255, 255, .8);
+}
+
+:root[data-theme="light"] .ladder-brief__tag {
+  color: #a84e00;
+}
+
+:root[data-theme="light"] .ladder-tip {
+  --tip-ink: #a84e00;
+  background: rgb(var(--tip-rgb) / .07);
+}
+
+:root[data-theme="light"] .ladder-tip.is-fixed {
+  --tip-ink: #00708f;
+}
+
+:root[data-theme="light"] .ladder-tip.is-run {
+  --tip-ink: var(--ladder-pass);
+}
+
+:root[data-theme="light"] .situation-shelf__row::after {
+  background: linear-gradient(180deg, rgb(var(--ladder-accent-rgb) / .8), rgb(var(--ladder-accent-rgb) / .34));
+}
+
+:root[data-theme="light"] .ladder-histogram {
+  background: rgba(74, 94, 139, .06);
+}
+
+:root[data-theme="light"] .ladder-levels button[aria-current="step"] b {
+  color: #04121d;
+}
+
+:root[data-theme="light"] .ladder-levels button.is-done b {
+  color: #fff;
+}
+
+:root[data-theme="light"] .ladder-main__head > em {
+  color: #8a5000;
+}
+
+:root[data-theme="light"] .ladder-main__head > em.is-ideal {
+  color: #0d6f48;
+}
+
+:root[data-theme="light"] .ladder-histogram__marker.is-guess line { stroke: #6a52d9; }
+:root[data-theme="light"] .ladder-histogram__marker.is-guess text { fill: #6a52d9; }
+
+/* 字母徽章（第 13 款起）比神兽占的面积大，缩小一些，脚底仍和神兽对齐。 */
+.kind-glyph:not(.is-hidden-kind) > svg {
+  width: 78%;
+  height: 78%;
+  align-self: end;
+}

@@ -1,0 +1,1125 @@
+/* Cake-cutting topic: exact geometry learning and experiment surfaces. */
+.cake-partition-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: visible;
+}
+
+.cake-svg-piece {
+  opacity: .58;
+  stroke: rgba(8, 13, 35, .72);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: opacity .2s ease;
+}
+
+.cake-svg-orbit,
+.cake-svg-square-orbit {
+  fill: none;
+  stroke: rgba(var(--topic-accent-rgb) / .12);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+}
+
+.cake-svg-label {
+  fill: #f5f7ff;
+  font-size: var(--learn-caption);
+  font-weight: 850;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  paint-order: stroke;
+  stroke: rgba(6, 10, 29, .76);
+  stroke-width: 3px;
+}
+
+.cake-svg-outer,
+.cake-svg-cut {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  transition: stroke .2s ease, stroke-width .2s ease, filter .2s ease;
+}
+
+.cake-svg-outer { stroke: rgba(255, 173, 104, .36); stroke-width: 1.5; }
+.cake-svg-cut { stroke: rgba(98, 230, 255, .32); stroke-width: 1.4; }
+.cake-svg-outer.is-highlighted { stroke: #ffad68; stroke-width: 3.5; filter: drop-shadow(0 0 4px rgba(255, 173, 104, .48)); }
+.cake-svg-cut.is-highlighted { stroke: #62e6ff; stroke-width: 3.2; filter: drop-shadow(0 0 4px rgba(98, 230, 255, .42)); }
+.cake-svg-center { fill: #f5f7ff; stroke: #0b1230; stroke-width: 2; }
+
+/* Learning visuals ------------------------------------------------------ */
+.cake-learning-visual {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cake-learning-criteria {
+  display: grid;
+  grid-template-rows: minmax(90px, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(7px, 1vh, 12px);
+  padding: clamp(8px, 1.2vw, 16px);
+}
+
+.cake-criteria-pieces {
+  width: min(94%, 540px);
+  height: min(17vh, 130px);
+  display: flex;
+  justify-self: center;
+  gap: 5px;
+  padding: 7px;
+  border: 1px solid rgba(var(--topic-accent-rgb) / .14);
+  border-radius: 8px;
+  background: rgba(5, 10, 30, .34);
+}
+
+.cake-criteria-pieces i {
+  position: relative;
+  min-width: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 5px;
+  background: linear-gradient(145deg, rgba(255, 173, 104, .68), rgba(156, 140, 255, .35));
+  transform: skewX(-5deg);
+}
+
+.cake-criteria-pieces i:nth-child(2) { background: linear-gradient(145deg, rgba(98, 230, 255, .65), rgba(55, 125, 203, .35)); }
+.cake-criteria-pieces i:nth-child(3) { background: linear-gradient(145deg, rgba(92, 242, 178, .6), rgba(53, 145, 117, .32)); }
+.cake-criteria-pieces span { color: #fff; font-size: var(--learn-small); font-style: normal; font-weight: 900; transform: skewX(5deg); }
+
+.cake-metric-switch {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.cake-metric-switch button,
+.cake-boundary-switch button {
+  min-width: 0;
+  padding: 7px;
+  border: 1px solid rgba(130, 151, 207, .14);
+  border-radius: 4px;
+  color: #8f9cbb;
+  background: rgba(255, 255, 255, .025);
+}
+
+.cake-metric-switch button span,
+.cake-metric-switch button strong { display: block; }
+.cake-metric-switch button span { font-size: var(--learn-small); }
+.cake-metric-switch button strong { margin-top: 2px; color: var(--ink-faint); font-family: "STIX Two Math", serif; font-size: var(--learn-small); }
+.cake-metric-switch button.is-active,
+.cake-boundary-switch button.is-active { border-color: rgba(var(--topic-accent-rgb) / .4); color: #eef4ff; background: rgba(var(--topic-accent-rgb) / .1); }
+.cake-metric-switch button.is-active strong { color: var(--topic-accent); }
+.cake-learning-criteria > p,
+.cake-comparison-visual > p { margin: 0; color: var(--ink-soft); font-size: var(--learn-small); text-align: center; }
+.cake-learning-criteria > p strong { margin-right: 8px; color: var(--topic-accent); }
+
+.cake-share-visual {
+  display: grid;
+  grid-template-rows: minmax(90px, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: clamp(10px, 1.5vw, 22px);
+}
+
+.cake-share-block {
+  position: relative;
+  width: min(94%, 600px);
+  height: min(20vh, 150px);
+  display: flex;
+  justify-self: center;
+  overflow: hidden;
+  border: 2px solid #ffad68;
+  border-radius: 8px;
+  background: rgba(5, 11, 31, .5);
+}
+
+.cake-share-block > i { display: grid; place-items: center; font-style: normal; transition: width .18s ease; }
+.cake-share-block > i:first-child { background: linear-gradient(135deg, rgba(255, 173, 104, .68), rgba(255, 113, 139, .28)); }
+.cake-share-block > i:nth-child(2) { border-left: 3px solid #62e6ff; background: linear-gradient(135deg, rgba(98, 230, 255, .54), rgba(156, 140, 255, .3)); }
+.cake-share-block > i span { color: #fff; font-size: clamp(14px, 1.5vw, 21px); font-weight: 900; }
+.cake-share-block > b { position: absolute; inset: -5px auto -5px; width: 1px; border-left: 1px dashed rgba(255, 255, 255, .8); }
+.cake-share-block > b span { position: absolute; top: 5px; left: 5px; color: #f0f5ff; font-size: var(--learn-caption); font-weight: 700; white-space: nowrap; }
+
+.cake-share-visual > label,
+.cake-visual-controls > label {
+  display: grid;
+  grid-template-columns: 120px minmax(100px, 1fr) 52px;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-size: var(--learn-small);
+}
+
+.cake-share-visual input[type="range"],
+.cake-visual-controls input[type="range"],
+.cake-range-control input[type="range"] { width: 100%; accent-color: var(--topic-accent); }
+.cake-share-visual label strong,
+.cake-visual-controls label strong { color: var(--topic-accent); text-align: right; }
+.cake-share-readout { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.cake-share-readout span { padding: 7px 9px; border: 1px solid rgba(var(--topic-accent-rgb) / .14); border-radius: 4px; color: var(--ink-faint); background: rgba(var(--topic-accent-rgb) / .04); font-size: var(--learn-small); }
+.cake-share-readout strong { float: right; color: var(--topic-accent); }
+
+.cake-angle-visual,
+.cake-boundary-visual {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.15fr) minmax(170px, .85fr);
+  align-items: center;
+  gap: clamp(7px, 1vw, 14px);
+  padding: 4px clamp(5px, .8vw, 12px);
+}
+
+.cake-angle-visual .cake-partition-svg,
+.cake-boundary-visual .cake-partition-svg { max-height: min(42vh, 360px); }
+.cake-visual-controls { display: grid; gap: 9px; }
+.cake-visual-controls > label { grid-template-columns: 1fr; gap: 4px; }
+.cake-visual-controls > label strong { grid-row: 1; justify-self: end; }
+.cake-visual-controls > label span { grid-row: 1; }
+.cake-visual-controls > label input { grid-column: 1; }
+.cake-visual-controls dl { display: grid; gap: 5px; margin: 0; }
+.cake-visual-controls dl > div { display: flex; justify-content: space-between; gap: 7px; padding: 6px 8px; border: 1px solid rgba(131, 152, 207, .12); border-radius: 4px; background: rgba(255, 255, 255, .02); font-size: var(--learn-small); }
+.cake-visual-controls dt { color: var(--ink-faint); }
+.cake-visual-controls dd { margin: 0; color: #dce6f8; font-weight: 700; }
+.cake-boundary-switch { display: grid; gap: 5px; }
+.cake-boundary-switch button { padding: 6px; font-size: var(--learn-small); }
+
+.cake-comparison-visual { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 10px; }
+.cake-comparison-visual table { width: 100%; border-collapse: collapse; color: var(--ink-soft); font-size: var(--learn-small); }
+.cake-comparison-visual th,
+.cake-comparison-visual td { padding: 7px; border: 1px solid rgba(132, 153, 210, .13); text-align: center; }
+.cake-comparison-visual thead th { color: var(--topic-accent); background: rgba(var(--topic-accent-rgb) / .05); }
+
+/* Playground ------------------------------------------------------------ */
+.cake-lab {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(255px, .74fr) minmax(430px, 1.55fr) minmax(330px, .98fr);
+  grid-template-rows: minmax(0, 1fr) clamp(43px, 6vh, 52px);
+  gap: clamp(7px, .78vw, 11px);
+}
+
+.cake-lab-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background: linear-gradient(180deg, rgba(16, 26, 62, .86), rgba(8, 14, 38, .82));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.cake-panel-heading,
+.cake-stage-heading,
+.cake-detail-section > header,
+.cake-saved-section > header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(131, 152, 208, .11);
+}
+
+.cake-panel-heading > span,
+.cake-stage-heading span,
+.cake-detail-section > header span,
+.cake-saved-section > header span {
+  display: block;
+  color: color-mix(in srgb, var(--topic-accent), #7885a7 45%);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .13em;
+}
+
+.cake-panel-heading h1,
+.cake-stage-heading h2,
+.cake-detail-section h2,
+.cake-saved-section h2 { margin: 2px 0 0; color: #edf3ff; font-size: clamp(14px, 1.15vw, 18px); }
+
+.cake-lab-controls {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: 8px;
+  padding: clamp(8px, .85vw, 13px);
+}
+
+.cake-brief-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.cake-brief-grid section { min-width: 0; padding: 5px 6px; border: 1px solid rgba(131, 152, 208, .11); border-radius: 4px; background: rgba(255, 255, 255, .018); }
+.cake-brief-grid strong { display: block; color: var(--topic-accent); font-size: 9px; }
+.cake-brief-grid p { margin: 2px 0 0; color: var(--ink-faint); font-size: 8.5px; line-height: 1.35; }
+
+.cake-hypothesis { min-width: 0; padding: 5px 6px; border: 1px solid rgba(var(--topic-accent-rgb) / .18); border-radius: 4px; background: rgba(var(--topic-accent-rgb) / .035); }
+.cake-hypothesis > header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 4px; }
+.cake-hypothesis > header strong { color: var(--topic-accent); font-size: 9px; }
+.cake-hypothesis > header small { color: var(--ink-faint); font-size: 8px; }
+.cake-hypothesis-form { min-width: 0; display: grid; grid-template-columns: minmax(72px, .85fr) minmax(88px, 1.2fr) auto; gap: 3px; }
+.cake-hypothesis-form :is(select, input, button) { min-width: 0; height: 25px; padding: 0 5px; border: 1px solid rgba(130, 151, 207, .16); border-radius: 4px; color: #dce5f6; background: #101938; font-size: 8px; }
+.cake-hypothesis-form button { color: var(--topic-accent); background: rgba(var(--topic-accent-rgb) / .07); }
+.cake-hypothesis-form button:disabled { color: var(--ink-faint); opacity: .55; }
+.cake-hypothesis > p { margin: 0; color: var(--ink-soft); font-size: 8.5px; line-height: 1.35; overflow-wrap: anywhere; }
+.cake-hypothesis > p strong { color: var(--topic-accent); }
+
+.cake-control-stack {
+  min-height: 0;
+  display: grid;
+  align-content: space-between;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.cake-control-stack fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.cake-control-stack legend,
+.cake-range-control > span,
+.cake-select-control > span { display: block; margin-bottom: 3px; color: var(--ink-faint); font-size: 9px; font-weight: 700; }
+.cake-range-control > span { display: flex; justify-content: space-between; }
+.cake-range-control > span strong { color: var(--topic-accent); }
+.cake-segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.cake-segmented button,
+.cake-criterion-grid button,
+.cake-lab-actions button {
+  border: 1px solid rgba(130, 151, 207, .15);
+  border-radius: 4px;
+  color: #8f9cbb;
+  background: rgba(255, 255, 255, .025);
+  font-size: 9px;
+}
+.cake-segmented button { min-height: 26px; }
+.cake-segmented button.is-active,
+.cake-criterion-grid button.is-active { border-color: rgba(var(--topic-accent-rgb) / .38); color: #eff5ff; background: rgba(var(--topic-accent-rgb) / .1); }
+.cake-select-control select { width: 100%; height: 27px; padding: 0 6px; border: 1px solid rgba(130, 151, 207, .15); border-radius: 4px; color: #dce5f6; background: #101938; font-size: 9px; }
+.cake-range-control input { display: block; height: 12px; }
+.cake-criterion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.cake-criterion-grid button { min-height: 23px; padding: 3px; }
+.cake-grid-controls { display: grid; gap: 4px; padding: 5px; border: 1px solid rgba(var(--topic-accent-rgb) / .1); border-radius: 4px; }
+
+.cake-lab-stage {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) minmax(115px, .38fr);
+  gap: 7px;
+  padding: clamp(8px, .85vw, 13px);
+}
+
+.cake-stage-heading p { flex: none; margin: 0; padding: 5px 8px; border: 1px solid rgba(92, 242, 178, .2); border-radius: 4px; color: #5cf2b2; background: rgba(92, 242, 178, .045); font-size: 9px; }
+.cake-stage-heading p.is-warning { border-color: rgba(255, 173, 104, .2); color: #ffad68; background: rgba(255, 173, 104, .045); }
+.cake-stage-visual { min-height: 0; display: grid; grid-template-columns: minmax(210px, 1.25fr) minmax(150px, .75fr); gap: 8px; }
+.cake-stage-svg { min-height: 0; position: relative; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(var(--topic-accent-rgb) / .1); border-radius: 6px; background: radial-gradient(circle, rgba(var(--topic-accent-rgb) / .075), rgba(4, 9, 29, .2) 64%); }
+.cake-stage-svg .cake-partition-svg { max-height: 100%; padding: 7px 7px 22px; }
+.cake-svg-legend { position: absolute; right: 6px; bottom: 5px; left: 6px; display: flex; justify-content: center; gap: 10px; color: var(--ink-faint); font-size: 8px; }
+.cake-svg-legend span { display: flex; align-items: center; gap: 4px; }
+.cake-svg-legend i { width: 14px; height: 2px; }
+.cake-svg-legend i.is-outer { background: #ffad68; }
+.cake-svg-legend i.is-cut { background: #62e6ff; }
+.cake-metric-cards { min-height: 0; display: grid; grid-template-columns: 1fr 1fr; align-content: center; gap: 5px; }
+.cake-metric-cards article { min-width: 0; padding: 6px; overflow: hidden; border: 1px solid rgba(130, 151, 207, .12); border-radius: 4px; background: rgba(255, 255, 255, .02); }
+.cake-metric-cards span,
+.cake-metric-cards small { display: block; color: var(--ink-faint); font-size: 8px; }
+.cake-metric-cards strong { display: block; margin: 2px 0 1px; overflow: hidden; color: #ecf2ff; font-size: clamp(12px, 1.1vw, 17px); white-space: nowrap; text-overflow: ellipsis; }
+.cake-metric-cards article:nth-child(2) strong,
+.cake-metric-cards article:nth-child(6) strong { color: var(--topic-accent); }
+
+.cake-charts { min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.cake-metric-chart { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); margin: 0; padding: 5px 7px; border: 1px solid rgba(130, 151, 207, .11); border-radius: 5px; background: rgba(255, 255, 255, .018); }
+.cake-metric-chart figcaption { color: var(--ink-soft); font-size: 9px; font-weight: 700; }
+.cake-metric-chart svg { width: 100%; height: 100%; }
+.cake-chart-axis { stroke: rgba(127, 148, 203, .22); }
+.cake-chart-target { stroke: #ffad68; stroke-width: 1; stroke-dasharray: 3 3; }
+.cake-chart-target-label { fill: #ffad68; font-size: 7px; text-anchor: end; }
+.cake-chart-bar { fill: #ffad68; opacity: .8; }
+.cake-chart-bar--1 { fill: #62e6ff; }
+.cake-chart-bar--2 { fill: #a98cff; }
+.cake-chart-bar--3 { fill: #5cf2b2; }
+.cake-chart-bar--4 { fill: #ff718b; }
+.cake-chart-bar--5 { fill: #ffd166; }
+.cake-chart-bar--6 { fill: #6fa8ff; }
+.cake-chart-bar--7 { fill: #c6ef71; }
+.cake-chart-label { fill: #8794b6; font-size: 7px; text-anchor: middle; }
+
+.cake-lab-analysis { display: grid; grid-template-rows: minmax(0, 1.12fr) minmax(0, .88fr); gap: 7px; padding: clamp(8px, .8vw, 12px); }
+.cake-detail-section,
+.cake-saved-section { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
+.cake-detail-section > header small,
+.cake-saved-section > header small { color: var(--ink-faint); font-size: 8px; }
+.cake-detail-section h2,
+.cake-saved-section h2 { font-size: 13px; }
+.cake-table-wrap { min-height: 0; overflow: hidden; }
+.cake-detail-section table,
+.cake-saved-section table { width: 100%; border-collapse: collapse; table-layout: fixed; color: var(--ink-soft); font-size: 8.5px; }
+.cake-detail-section th,
+.cake-detail-section td,
+.cake-saved-section th,
+.cake-saved-section td { height: 21px; padding: 2px 3px; overflow: hidden; border-bottom: 1px solid rgba(130, 151, 207, .09); text-align: right; white-space: nowrap; text-overflow: ellipsis; }
+.cake-detail-section th:first-child,
+.cake-saved-section th:first-child { text-align: left; }
+.cake-detail-section thead th,
+.cake-saved-section thead th { color: var(--topic-accent); font-weight: 750; }
+.cake-saved-section { grid-template-rows: auto minmax(0, 1fr) auto; }
+.cake-saved-section tr.is-best { color: #eff5ff; background: rgba(var(--topic-accent-rgb) / .08); }
+.cake-saved-section tr.is-best th::after { content: "较优"; margin-left: 3px; color: var(--topic-accent); font-size: 7px; }
+.cake-empty-plans { align-self: center; margin: 0; padding: 10px; color: var(--ink-faint); font-size: 9px; line-height: 1.5; text-align: center; }
+.cake-best-plan { margin: 4px 0 0; padding: 5px 6px; border-left: 2px solid var(--topic-accent); color: var(--ink-soft); background: rgba(var(--topic-accent-rgb) / .045); font-size: 8.5px; }
+.cake-best-plan strong { color: var(--topic-accent); }
+.cake-best-plan p { margin: 0; }
+.cake-best-plan button { margin-top: 3px; padding: 3px 6px; color: var(--topic-accent); border: 1px solid rgba(var(--topic-accent-rgb) / .25); border-radius: 3px; background: rgba(var(--topic-accent-rgb) / .06); font-size: 8px; }
+.cake-best-plan small { display: block; margin-top: 3px; color: var(--ink-faint); line-height: 1.3; }
+
+.cake-lab-footer { grid-column: 1 / -1; min-width: 0; display: grid; grid-template-columns: minmax(220px, 1fr) auto; align-items: center; gap: 10px; padding: 5px 8px; border: 1px solid rgba(132, 153, 211, .13); border-radius: var(--radius-panel); background: rgba(8, 14, 39, .76); box-shadow: 0 10px 28px rgba(0, 0, 0, .16); }
+.cake-lab-notice { min-width: 0; display: flex; align-items: center; gap: 7px; color: var(--ink-soft); font-size: 9px; }
+.cake-lab-notice i { width: 7px; height: 7px; flex: none; border: 1px solid var(--topic-accent); border-radius: 50%; box-shadow: 0 0 7px rgba(var(--topic-accent-rgb) / .35); }
+.cake-lab-notice i.is-complete { background: #5cf2b2; border-color: #5cf2b2; }
+.cake-lab-notice span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cake-lab-actions { display: flex; gap: 5px; }
+.cake-lab-actions button { min-height: 30px; padding: 5px 9px; }
+.cake-lab-actions button:first-child,
+.cake-lab-actions button:nth-child(2) { border-color: rgba(var(--topic-accent-rgb) / .32); color: var(--topic-accent); background: rgba(var(--topic-accent-rgb) / .07); }
+
+@media (max-width: 1180px) {
+  .cake-lab { grid-template-columns: minmax(235px, .72fr) minmax(390px, 1.45fr) minmax(295px, .9fr); gap: 6px; }
+  .cake-lab-controls,
+  .cake-lab-stage,
+  .cake-lab-analysis { padding: 7px; }
+  .cake-stage-visual { grid-template-columns: minmax(190px, 1.15fr) minmax(145px, .85fr); }
+  .cake-brief-grid p { font-size: 8px; }
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+  .cake-lab { grid-template-rows: minmax(0, 1fr) 39px; }
+  .cake-lab-controls { gap: 5px; }
+  .cake-panel-heading { padding-bottom: 4px; }
+  .cake-panel-heading h1,
+  .cake-stage-heading h2 { font-size: 13px; }
+  .cake-brief-grid section { padding: 3px 4px; }
+  .cake-brief-grid p { margin-top: 1px; font-size: 7.5px; line-height: 1.2; }
+  .cake-hypothesis { padding: 3px 4px; }
+  .cake-hypothesis > header { margin-bottom: 2px; }
+  .cake-hypothesis-form :is(select, input, button) { height: 22px; }
+  .cake-control-stack { gap: 2px; }
+  .cake-segmented button { min-height: 22px; }
+  .cake-select-control select { height: 23px; }
+  .cake-criterion-grid button { min-height: 20px; }
+  .cake-lab-stage { grid-template-rows: auto minmax(0, 1fr) 102px; gap: 4px; }
+  .cake-stage-heading { padding-bottom: 4px; }
+  .cake-stage-heading p { padding: 3px 5px; }
+  .cake-metric-cards article { padding: 4px; }
+  .cake-detail-section th,
+  .cake-detail-section td,
+  .cake-saved-section th,
+  .cake-saved-section td { height: 18px; }
+  .cake-lab-actions button { min-height: 27px; padding-block: 3px; }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .cake-brief-grid p { display: none; }
+  .cake-brief-grid section { padding: 3px; }
+  .cake-control-stack legend,
+  .cake-range-control > span,
+  .cake-select-control > span { margin-bottom: 1px; }
+  .cake-metric-cards small,
+  .cake-svg-legend { display: none; }
+  .cake-stage-svg .cake-partition-svg { padding-bottom: 5px; }
+  .cake-lab-stage { grid-template-rows: auto minmax(0, 1fr) 80px; }
+  .cake-detail-section th,
+  .cake-detail-section td,
+  .cake-saved-section th,
+  .cake-saved-section td { height: 15px; font-size: 7.5px; }
+}
+
+@media (max-width: 960px) and (max-height: 520px) and (orientation: landscape) {
+  .cake-lab {
+    grid-template-columns: minmax(190px, .92fr) minmax(270px, 1.2fr) minmax(210px, .9fr);
+    gap: 5px;
+  }
+  .cake-lab-controls,
+  .cake-lab-stage,
+  .cake-lab-analysis { padding: 5px; }
+  .cake-lab-controls { gap: 3px; }
+  .cake-panel-heading { padding-bottom: 2px; }
+  .cake-brief-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; }
+  .cake-brief-grid section { padding: 2px 3px; text-align: center; }
+  .cake-brief-grid strong { font-size: 7.5px; white-space: nowrap; }
+  .cake-hypothesis { padding: 2px 3px; }
+  .cake-hypothesis > header { margin-bottom: 1px; }
+  .cake-hypothesis-form { grid-template-columns: minmax(58px, .8fr) minmax(70px, 1.2fr) auto; gap: 2px; }
+  .cake-hypothesis-form :is(select, input, button) { height: 20px; padding-inline: 3px; font-size: 7.5px; }
+  .cake-control-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    gap: 2px 5px;
+  }
+  .cake-control-stack > * { min-width: 0; }
+  .cake-grid-controls {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+    padding: 2px 3px;
+  }
+  .cake-grid-controls > * { min-width: 0; }
+  .cake-control-stack legend,
+  .cake-range-control > span,
+  .cake-select-control > span { font-size: 7.5px; }
+  .cake-segmented button { min-height: 19px; }
+  .cake-select-control select { height: 20px; padding-inline: 3px; font-size: 7.5px; }
+  .cake-range-control input { height: 9px; }
+  .cake-criterion-grid button { min-height: 17px; font-size: 7.5px; }
+  .cake-stage-visual { grid-template-columns: minmax(145px, 1.15fr) minmax(95px, .85fr); gap: 4px; }
+  .cake-lab-footer {
+    grid-template-columns: minmax(120px, 1fr) auto;
+    gap: 5px;
+    padding: 3px 5px;
+  }
+  .cake-lab-actions { gap: 3px; }
+  .cake-lab-actions button { min-height: 25px; padding: 2px 5px; font-size: 8px; }
+}
+
+:root[data-theme="light"] .cake-lab-panel {
+  border-color: rgba(52, 81, 137, .17);
+  background: linear-gradient(180deg, rgba(252, 253, 255, .93), rgba(237, 243, 253, .9));
+  box-shadow: 0 16px 42px rgba(61, 78, 119, .15), inset 0 1px rgba(255, 255, 255, .92);
+}
+:root[data-theme="light"] :is(.cake-panel-heading h1, .cake-stage-heading h2, .cake-detail-section h2, .cake-saved-section h2, .cake-metric-cards strong) { color: #172641; }
+:root[data-theme="light"] :is(.cake-brief-grid section, .cake-metric-cards article, .cake-metric-chart, .cake-visual-controls dl > div) { background: rgba(255, 255, 255, .54); }
+:root[data-theme="light"] .cake-select-control select { color: #243550; background: #eef3fb; }
+:root[data-theme="light"] .cake-hypothesis-form :is(select, input, button) { color: #243550; background: #eef3fb; }
+:root[data-theme="light"] .cake-stage-svg { background: radial-gradient(circle, rgba(var(--topic-accent-rgb) / .1), rgba(235, 241, 251, .5) 68%); }
+:root[data-theme="light"] .cake-svg-label { fill: #fff; }
+:root[data-theme="light"] .cake-lab-footer { border-color: rgba(54, 81, 135, .14); background: rgba(244, 248, 255, .82); }
+
+/* Playground visual alignment with the blind-box laboratory dashboard. */
+.cake-lab {
+  grid-template-columns: minmax(310px, 1.02fr) minmax(430px, 1.18fr) minmax(340px, .98fr);
+  grid-template-rows: minmax(0, 1fr) clamp(47px, 6vh, 54px);
+  gap: clamp(7px, .82vw, 11px);
+}
+
+.cake-lab-panel,
+.cake-lab-footer {
+  position: relative;
+  border-color: var(--line);
+  border-radius: var(--radius-panel);
+  background:
+    linear-gradient(138deg, rgba(255, 255, 255, .035), transparent 31%),
+    linear-gradient(180deg, rgba(16, 26, 62, .83), rgba(8, 14, 38, .8));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(19px) saturate(1.18);
+}
+
+.cake-lab-panel::before,
+.cake-lab-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  width: 44%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(var(--topic-accent-rgb) / .62), transparent);
+  pointer-events: none;
+}
+
+.cake-lab-controls,
+.cake-lab-stage,
+.cake-lab-analysis {
+  padding: clamp(10px, .9vw, 14px);
+}
+
+.cake-lab-controls {
+  --font-caption: clamp(11px, .72vw, 12px);
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: clamp(8px, 1vh, 11px);
+}
+
+.cake-panel-heading,
+.cake-stage-heading,
+.cake-detail-section > header,
+.cake-saved-section > header {
+  min-height: 40px;
+  justify-content: flex-start;
+  gap: clamp(8px, .75vw, 12px);
+  padding-bottom: 8px;
+}
+
+.cake-stage-heading,
+.cake-detail-section > header,
+.cake-saved-section > header {
+  justify-content: space-between;
+}
+
+.cake-stage-heading > div,
+.cake-detail-section > header > div,
+.cake-saved-section > header > div {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(8px, .75vw, 12px);
+  overflow: hidden;
+}
+
+.cake-panel-heading > span,
+.cake-stage-heading span,
+.cake-detail-section > header span,
+.cake-saved-section > header span {
+  flex: none;
+  color: color-mix(in srgb, var(--topic-accent), var(--ink-faint) 58%);
+  font-size: var(--font-caption);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .15em;
+  white-space: nowrap;
+}
+
+.cake-panel-heading h1,
+.cake-stage-heading h2,
+.cake-detail-section h2,
+.cake-saved-section h2 {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: var(--font-panel-title);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cake-brief-grid {
+  gap: 6px;
+}
+
+.cake-brief-grid section {
+  padding: 7px 8px;
+  border-color: rgba(131, 152, 208, .14);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, .024);
+}
+
+.cake-brief-grid strong {
+  font-size: var(--font-caption);
+  line-height: 1.2;
+}
+
+.cake-brief-grid p {
+  margin-top: 3px;
+  font-size: var(--font-caption);
+  line-height: 1.4;
+}
+
+.cake-hypothesis {
+  padding: 8px;
+  border-color: rgba(var(--topic-accent-rgb) / .22);
+  border-radius: var(--radius-card);
+  background: rgba(var(--topic-accent-rgb) / .045);
+}
+
+.cake-hypothesis > header {
+  margin-bottom: 6px;
+}
+
+.cake-hypothesis > header strong,
+.cake-hypothesis > header small,
+.cake-hypothesis > p {
+  font-size: var(--font-caption);
+}
+
+.cake-hypothesis-form {
+  grid-template-columns: minmax(95px, .85fr) minmax(120px, 1.2fr) auto;
+  gap: 5px;
+}
+
+.cake-hypothesis-form :is(select, input, button) {
+  height: 32px;
+  padding: 0 8px;
+  border-color: rgba(130, 151, 207, .2);
+  border-radius: var(--radius-card);
+  font-size: var(--font-caption);
+}
+
+.cake-control-stack {
+  align-content: space-between;
+  gap: clamp(7px, .9vh, 10px);
+  overflow: visible;
+}
+
+.cake-control-stack legend,
+.cake-range-control > span,
+.cake-select-control > span {
+  margin-bottom: 5px;
+  font-size: var(--font-caption);
+}
+
+.cake-segmented,
+.cake-criterion-grid {
+  gap: 5px;
+}
+
+.cake-segmented button,
+.cake-criterion-grid button,
+.cake-lab-actions button {
+  min-height: 31px;
+  border-color: rgba(130, 151, 207, .18);
+  border-radius: var(--radius-card);
+  font-size: var(--font-caption);
+  transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .18s ease;
+}
+
+.cake-segmented button:hover:not(:disabled),
+.cake-criterion-grid button:hover:not(:disabled),
+.cake-lab-actions button:hover:not(:disabled) {
+  border-color: rgba(var(--topic-accent-rgb) / .42);
+  color: var(--ink);
+  background: rgba(var(--topic-accent-rgb) / .09);
+}
+
+.cake-select-control select {
+  height: 32px;
+  padding: 0 8px;
+  border-color: rgba(130, 151, 207, .18);
+  border-radius: var(--radius-card);
+  font-size: var(--font-caption);
+}
+
+.cake-range-control input {
+  width: 100%;
+  height: 16px;
+  accent-color: var(--topic-accent);
+}
+
+.cake-criterion-grid button {
+  min-height: 29px;
+  padding: 5px;
+}
+
+.cake-grid-controls {
+  gap: 6px;
+  padding: 7px;
+  border-color: rgba(var(--topic-accent-rgb) / .14);
+  border-radius: var(--radius-card);
+}
+
+.cake-lab-stage {
+  grid-template-rows: auto minmax(0, 1fr) minmax(140px, .4fr);
+  gap: 9px;
+}
+
+.cake-stage-heading p {
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: var(--font-caption);
+  font-weight: 700;
+}
+
+.cake-stage-visual {
+  grid-template-columns: minmax(260px, 1fr) clamp(140px, 25%, 150px);
+  gap: 10px;
+}
+
+.cake-stage-svg {
+  border-color: rgba(var(--topic-accent-rgb) / .14);
+  border-radius: var(--radius-card);
+  background: radial-gradient(circle, rgba(var(--topic-accent-rgb) / .09), rgba(4, 9, 29, .2) 64%);
+}
+
+.cake-stage-svg .cake-partition-svg {
+  padding: 10px 10px 28px;
+}
+
+.cake-svg-legend {
+  bottom: 7px;
+  gap: 14px;
+  font-size: var(--font-caption);
+}
+
+.cake-metric-cards {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  align-content: stretch;
+  gap: 7px;
+}
+
+.cake-metric-cards article {
+  padding: 8px;
+  border-color: rgba(130, 151, 207, .14);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, .024);
+}
+
+.cake-metric-cards span,
+.cake-metric-cards small {
+  font-size: var(--font-caption);
+}
+
+.cake-metric-cards strong {
+  margin: 3px 0 2px;
+  font-size: clamp(16px, 1.35vw, 22px);
+}
+
+.cake-charts {
+  gap: 8px;
+}
+
+.cake-metric-chart {
+  padding: 8px 10px;
+  border-color: rgba(130, 151, 207, .13);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, .024);
+}
+
+.cake-metric-chart figcaption {
+  font-size: var(--font-small);
+}
+
+.cake-chart-target-label,
+.cake-chart-label {
+  font-size: 9px;
+}
+
+.cake-lab-analysis {
+  grid-template-rows: minmax(0, 1.06fr) minmax(0, .94fr);
+  gap: 10px;
+}
+
+.cake-detail-section > header small,
+.cake-saved-section > header small {
+  flex: none;
+  font-size: var(--font-caption);
+}
+
+.cake-table-wrap {
+  overflow: auto;
+}
+
+.cake-detail-section table,
+.cake-saved-section table {
+  font-size: var(--font-caption);
+}
+
+.cake-saved-section > table {
+  align-self: start;
+}
+
+.cake-detail-section th,
+.cake-detail-section td,
+.cake-saved-section th,
+.cake-saved-section td {
+  height: 30px;
+  padding: 5px 6px;
+  border-bottom-color: rgba(130, 151, 207, .11);
+}
+
+.cake-saved-section tr.is-best th::after {
+  font-size: 9px;
+}
+
+.cake-empty-plans {
+  padding: 16px;
+  font-size: var(--font-small);
+}
+
+.cake-best-plan {
+  margin-top: 6px;
+  padding: 8px 9px;
+  font-size: var(--font-caption);
+  line-height: 1.4;
+}
+
+.cake-best-plan button {
+  min-height: 28px;
+  margin-top: 5px;
+  padding: 5px 8px;
+  border-radius: var(--radius-card);
+  font-size: var(--font-caption);
+}
+
+.cake-best-plan small {
+  line-height: 1.4;
+}
+
+.cake-lab-footer {
+  grid-template-columns: minmax(260px, 1fr) auto;
+  gap: 12px;
+  padding: 7px 10px;
+}
+
+.cake-lab-notice {
+  gap: 8px;
+  font-size: var(--font-small);
+}
+
+.cake-lab-notice i {
+  width: 8px;
+  height: 8px;
+}
+
+.cake-lab-actions {
+  gap: 6px;
+}
+
+.cake-lab-actions button {
+  min-height: 34px;
+  padding: 6px 11px;
+}
+
+.cake-lab-actions button:first-child,
+.cake-lab-actions button:nth-child(2) {
+  font-weight: 750;
+}
+
+:root[data-theme="light"] .cake-lab-panel,
+:root[data-theme="light"] .cake-lab-footer {
+  background:
+    linear-gradient(138deg, rgba(255, 255, 255, .9), rgba(255, 255, 255, .2) 31%),
+    linear-gradient(180deg, rgba(252, 253, 255, .9), rgba(238, 244, 255, .86));
+  box-shadow: var(--shadow);
+}
+
+:root[data-theme="light"] .cake-lab-panel::before,
+:root[data-theme="light"] .cake-lab-footer::before {
+  background: linear-gradient(90deg, transparent, rgba(var(--topic-accent-rgb) / .42), transparent);
+}
+
+:root[data-theme="light"] :is(
+  .cake-brief-grid section,
+  .cake-hypothesis,
+  .cake-metric-cards article,
+  .cake-metric-chart
+) {
+  background: rgba(255, 255, 255, .54);
+}
+
+:root[data-theme="light"] :is(
+  .cake-segmented button,
+  .cake-criterion-grid button,
+  .cake-lab-actions button
+) {
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, .4);
+}
+
+:root[data-theme="light"] :is(
+  .cake-segmented button.is-active,
+  .cake-criterion-grid button.is-active
+) {
+  color: var(--ink);
+  background: rgba(var(--topic-accent-rgb) / .11);
+}
+
+:root[data-theme="light"] .cake-saved-section tr.is-best {
+  color: var(--ink);
+  background: rgba(var(--topic-accent-rgb) / .09);
+}
+
+@media (max-width: 1180px) {
+  .cake-lab {
+    grid-template-columns: minmax(275px, .98fr) minmax(380px, 1.2fr) minmax(300px, .94fr);
+    gap: 6px;
+  }
+
+  .cake-lab-controls,
+  .cake-lab-stage,
+  .cake-lab-analysis {
+    padding: 8px;
+  }
+
+  .cake-brief-grid p {
+    font-size: 10.5px;
+  }
+
+  .cake-stage-visual {
+    grid-template-columns: minmax(210px, 1fr) clamp(120px, 30%, 135px);
+  }
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+  .cake-lab {
+    grid-template-rows: minmax(0, 1fr) 40px;
+  }
+
+  .cake-lab-controls {
+    gap: 5px;
+  }
+
+  .cake-panel-heading,
+  .cake-stage-heading,
+  .cake-detail-section > header,
+  .cake-saved-section > header {
+    min-height: 27px;
+    padding-bottom: 4px;
+  }
+
+  .cake-panel-heading h1,
+  .cake-stage-heading h2,
+  .cake-detail-section h2,
+  .cake-saved-section h2 {
+    font-size: 13px;
+  }
+
+  .cake-brief-grid section,
+  .cake-hypothesis {
+    padding: 4px 5px;
+  }
+
+  .cake-brief-grid p {
+    margin-top: 1px;
+    font-size: 8px;
+    line-height: 1.2;
+  }
+
+  .cake-hypothesis-form :is(select, input, button),
+  .cake-select-control select {
+    height: 23px;
+    font-size: 8px;
+  }
+
+  .cake-control-stack {
+    gap: 3px;
+  }
+
+  .cake-control-stack legend,
+  .cake-range-control > span,
+  .cake-select-control > span,
+  .cake-hypothesis > header strong,
+  .cake-hypothesis > header small {
+    margin-bottom: 2px;
+    font-size: 8px;
+  }
+
+  .cake-segmented button,
+  .cake-criterion-grid button {
+    min-height: 21px;
+    padding: 2px;
+    font-size: 8px;
+  }
+
+  .cake-range-control input {
+    height: 10px;
+  }
+
+  .cake-lab-stage {
+    grid-template-rows: auto minmax(0, 1fr) 102px;
+    gap: 4px;
+  }
+
+  .cake-stage-heading p {
+    padding: 3px 6px;
+    font-size: 8px;
+  }
+
+  .cake-stage-svg .cake-partition-svg {
+    padding-bottom: 18px;
+  }
+
+  .cake-svg-legend,
+  .cake-metric-cards span,
+  .cake-metric-cards small,
+  .cake-detail-section table,
+  .cake-saved-section table {
+    font-size: 8px;
+  }
+
+  .cake-metric-cards article {
+    padding: 4px;
+  }
+
+  .cake-metric-cards strong {
+    font-size: 13px;
+  }
+
+  .cake-detail-section th,
+  .cake-detail-section td,
+  .cake-saved-section th,
+  .cake-saved-section td {
+    height: 18px;
+    padding: 2px 3px;
+  }
+
+  .cake-lab-footer {
+    padding: 3px 6px;
+  }
+
+  .cake-lab-notice {
+    font-size: 8px;
+  }
+
+  .cake-lab-actions button {
+    min-height: 27px;
+    padding: 3px 7px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 960px) and (max-height: 520px) and (orientation: landscape) {
+  .cake-lab {
+    grid-template-columns: minmax(190px, .92fr) minmax(270px, 1.2fr) minmax(210px, .9fr);
+    gap: 5px;
+  }
+
+  .cake-lab-controls,
+  .cake-lab-stage,
+  .cake-lab-analysis {
+    padding: 5px;
+  }
+
+  .cake-brief-grid p {
+    display: none;
+  }
+
+  .cake-brief-grid section {
+    padding: 2px 3px;
+    text-align: center;
+  }
+
+  .cake-brief-grid strong,
+  .cake-panel-heading > span,
+  .cake-stage-heading span,
+  .cake-detail-section > header span,
+  .cake-saved-section > header span {
+    font-size: 8px;
+  }
+
+  .cake-hypothesis {
+    padding: 2px 3px;
+  }
+
+  .cake-hypothesis-form {
+    grid-template-columns: minmax(58px, .8fr) minmax(70px, 1.2fr) auto;
+    gap: 2px;
+  }
+
+  .cake-hypothesis-form :is(select, input, button) {
+    height: 20px;
+    padding-inline: 3px;
+    font-size: 8px;
+  }
+
+  .cake-control-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    gap: 2px 5px;
+  }
+
+  .cake-grid-controls {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+    padding: 2px 3px;
+  }
+
+  .cake-stage-visual {
+    grid-template-columns: minmax(170px, 1fr) clamp(82px, 26%, 96px);
+    gap: 4px;
+  }
+
+  .cake-metric-cards small,
+  .cake-svg-legend {
+    display: none;
+  }
+
+  .cake-stage-svg .cake-partition-svg {
+    padding-bottom: 5px;
+  }
+}
